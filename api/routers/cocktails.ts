@@ -51,11 +51,12 @@ cocktailsRouter.get('/byUser', auth, async (req, res, next) => {
 
 cocktailsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next) => {
   try {
+    const user = (req as RequestWithUser).user;
     const cocktail = await Cocktail.create({
       name: req.body.name,
-      user: req.body.user,
       recipe: req.body.recipe,
-      ingredients: req.body.ingredients,
+      user: user._id,
+      ingredients: JSON.parse(req.body.ingredients),
       image: req.file ? req.file.filename : null,
     });
 

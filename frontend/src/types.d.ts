@@ -52,6 +52,10 @@ export interface CocktailMutation {
   image: File | null;
 }
 
+export interface CocktailMutationSend extends CocktailMutation {
+  ingredients: string;
+}
+
 export interface Cocktail extends CocktailMutation {
   _id: string;
   isPublished: boolean;

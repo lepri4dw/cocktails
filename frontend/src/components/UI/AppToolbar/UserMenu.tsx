@@ -5,6 +5,7 @@ import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import { logout } from '../../../features/users/usersThunks';
 import {selectLogoutLoading} from "../../../features/users/usersSlice";
 import {apiURL} from "../../../constants";
+import {NavLink} from "react-router-dom";
 
 interface Props {
   user: User;
@@ -41,7 +42,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
         onClose={handleClose}
       >
         <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
+        <MenuItem component={NavLink} to="/new-cocktail">Add cocktail</MenuItem>
         <MenuItem onClick={handleLogout} disabled={logoutLoading}>{logoutLoading && <CircularProgress size={20} sx={{mr: 1}}/>}Logout</MenuItem>
       </Menu>
     </>
