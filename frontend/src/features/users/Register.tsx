@@ -91,7 +91,7 @@ const Register = () => {
             <Grid item xs={12}>
               <TextField
                 label="Email"
-                name="username"
+                name="username" type="email"
                 autoComplete="new-username"
                 value={state.username} required
                 onChange={inputChangeHandler}

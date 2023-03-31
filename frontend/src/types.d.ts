@@ -39,3 +39,20 @@ export interface LoginMutation {
   username: string;
   password: string;
 }
+
+export interface Ingredient {
+  name: string;
+  amount: string;
+}
+
+export interface CocktailMutation {
+  name: string;
+  recipe: string;
+  ingredients: Ingredient[];
+  image: File | null;
+}
+
+export interface Cocktail extends CocktailMutation {
+  _id: string;
+  isPublished: boolean;
+}

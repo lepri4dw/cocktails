@@ -7,20 +7,23 @@ import crypto from "crypto";
 import * as fs from "fs";
 import fetch from 'node-fetch';
 import path from "path";
+import {imagesUpload} from "../multer";
 
 const usersRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
 
-usersRouter.post('/', async (req, res, next) => {
+usersRouter.post('/', imagesUpload.single('avatar'), async (req, res, next) => {
   try {
     const user = new User({
       username: req.body.username,
       password: req.body.password,
+      displayName: req.body.displayName,
+      avatar: req.file ? req.file.filename : null,
     });
 
     user.generateToken();
     await user.save();
-    return res.send({message: 'Success', user});
+    return res.send(user);
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       return res.status(400).send(error);
@@ -142,7 +145,7 @@ usersRouter.delete('/sessions', async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-})
+});
 
 
 export default usersRouter;
