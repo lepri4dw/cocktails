@@ -13,18 +13,18 @@ cocktailsRouter.get('/', user, async (req, res, next) => {
     const user = (req as RequestWithUser).user;
 
     if (user && user.role === 'admin') {
-      const cocktails = await Cocktail.find({}, 'image name');
+      const cocktails = await Cocktail.find({}, 'image name isPublished');
       return res.send(cocktails);
     }
 
-    const cocktails = await Cocktail.find({isPublished: true}, 'image name');
+    const cocktails = await Cocktail.find({isPublished: true}, 'image name isPublished');
     return res.send(cocktails);
   } catch (e) {
     return next(e);
   }
 });
 
-cocktailsRouter.get('/:id', async (req, res, next) => {
+cocktailsRouter.get('/one/:id', async (req, res, next) => {
   try {
     const cocktail = await Cocktail.findById(req.params.id);
 
@@ -38,16 +38,28 @@ cocktailsRouter.get('/:id', async (req, res, next) => {
   }
 });
 
-cocktailsRouter.get('/byUser', auth, async (req, res, next) => {
+cocktailsRouter.get('/user', auth, async (req, res, next) => {
   try {
-    const user = (req as RequestWithUser).user;
+     const user = (req as RequestWithUser).user;
 
-    const cocktails = await Cocktail.find({user: user._id});
-    return res.send(cocktails);
+     const cocktails = await Cocktail.find({ user: user._id });
+     return res.send(cocktails);
   } catch (e) {
     return next(e);
   }
 });
+
+// cocktailsRouter.get('/by-user/', auth, async (req, res, next) => {
+//   try {
+//     const user = (req as RequestWithUser).user;
+//
+//     const cocktails = await Cocktail.find({ user: user._id });
+//     console.log(user, cocktails);
+//     return res.send(cocktails);
+//   } catch (e) {
+//     return next(e);
+//   }
+// });
 
 cocktailsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next) => {
   try {

@@ -8,6 +8,7 @@ import {Button, Grid, IconButton, TextField, Typography} from '@mui/material';
 import FileInput from '../../../components/UI/FileInput/FileInput';
 import { LoadingButton } from '@mui/lab';
 import ClearIcon from '@mui/icons-material/Clear';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 
 const CocktailForm = () => {
   const navigate = useNavigate();
@@ -19,9 +20,6 @@ const CocktailForm = () => {
     image: null,
     recipe: '',
     ingredients: [{
-      name: '',
-      amount: '',
-    }, {
       name: '',
       amount: '',
     }],
@@ -65,7 +63,8 @@ const CocktailForm = () => {
         ...state,
         ingredients: JSON.stringify(state.ingredients),
       })).unwrap();
-      navigate('/');
+      enqueueSnackbar('Your cocktail is under moderation!');
+      setTimeout(() => navigate('/my-cocktails'), 2500);
     } catch (e) {
 
     }
@@ -94,85 +93,88 @@ const CocktailForm = () => {
     }));
   };
   return (
-    <form onSubmit={submitFormHandler}>
-      <Grid container direction="column" spacing={2}>
-        <Grid item xs>
-          <Typography variant="h5">New artist</Typography>
-        </Grid>
-
-        <Grid item xs>
-          <TextField
-            id="name" label="Name"
-            value={state.name}
-            onChange={inputChangeHandler}
-            name="name" required
-            error={Boolean(getFieldError('name'))}
-            helperText={getFieldError('name')}
-          />
-        </Grid>
-
-        <Grid item xs>
-          <TextField
-            multiline rows={3}
-            id="recipe" label="Recipe"
-            value={state.recipe}
-            onChange={inputChangeHandler}
-            name="recipe" required
-            error={Boolean(getFieldError('recipe'))}
-            helperText={getFieldError('recipe')}
-          />
-        </Grid>
-
-        <Grid item container direction="column" xs spacing={2}>
-          <Grid item>
-            <Typography variant="h6">Ingredients</Typography>
-          </Grid>
-          <Grid item container direction="column" xs spacing={2}>
-            {state.ingredients.map((ing, index) => (
-              <Grid container item xs spacing={1} key={index}>
-                <Grid item xs={6}>
-                  <TextField
-                    id="name" label="Ingredient name"
-                    value={ing.name}
-                    onChange={(e) => ingInputChangeHandler(e, index)}
-                    name="name" required
-                  />
-                </Grid>
-                <Grid item xs={3}>
-                  <TextField
-                    id="amount" label="Amount"
-                    value={ing.amount}
-                    onChange={(e) => ingInputChangeHandler(e, index)}
-                    name="amount" required
-                  />
-                </Grid>
-                <Grid item xs={2}>
-                  {index !== 0 && <IconButton size="large" onClick={() => deleteIngredientHandler(index)}>
-                    <ClearIcon />
-                  </IconButton> }
-                </Grid>
-              </Grid>
-            ))}
-          </Grid>
+    <>
+      <SnackbarProvider/>
+      <form onSubmit={submitFormHandler}>
+        <Grid container direction="column" spacing={2}>
           <Grid item xs>
-            <Button color="primary" variant="contained" onClick={addIngredientHandler}>Add ingredient</Button>
+            <Typography variant="h5">New artist</Typography>
+          </Grid>
+
+          <Grid item xs>
+            <TextField
+              id="name" label="Name"
+              value={state.name}
+              onChange={inputChangeHandler}
+              name="name" required
+              error={Boolean(getFieldError('name'))}
+              helperText={getFieldError('name')}
+            />
+          </Grid>
+
+          <Grid item xs>
+            <TextField
+              multiline rows={3}
+              id="recipe" label="Recipe"
+              value={state.recipe}
+              onChange={inputChangeHandler}
+              name="recipe" required
+              error={Boolean(getFieldError('recipe'))}
+              helperText={getFieldError('recipe')}
+            />
+          </Grid>
+
+          <Grid item container direction="column" xs spacing={2}>
+            <Grid item>
+              <Typography variant="h6">Ingredients</Typography>
+            </Grid>
+            <Grid item container direction="column" xs spacing={2}>
+              {state.ingredients.map((ing, index) => (
+                <Grid container item xs spacing={1} key={index}>
+                  <Grid item xs={6}>
+                    <TextField
+                      id="name" label="Ingredient name"
+                      value={ing.name}
+                      onChange={(e) => ingInputChangeHandler(e, index)}
+                      name="name" required
+                    />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <TextField
+                      id="amount" label="Amount"
+                      value={ing.amount}
+                      onChange={(e) => ingInputChangeHandler(e, index)}
+                      name="amount" required
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    {index !== 0 && <IconButton size="large" onClick={() => deleteIngredientHandler(index)}>
+                      <ClearIcon />
+                    </IconButton> }
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
+            <Grid item xs>
+              <Button color="primary" variant="contained" onClick={addIngredientHandler}>Add ingredient</Button>
+            </Grid>
+          </Grid>
+
+          <Grid item xs>
+            <FileInput
+              label="Image" onChange={fileInputChangeHandler}
+              name="image" required={true}
+              error={Boolean(getFieldError('image'))}
+              helperText={getFieldError('image')}
+            />
+          </Grid>
+
+          <Grid item xs>
+            <LoadingButton loadingIndicator="Loading…" loading={creating} type="submit" color="primary" variant="contained">Create</LoadingButton>
           </Grid>
         </Grid>
-
-        <Grid item xs>
-          <FileInput
-            label="Image" onChange={fileInputChangeHandler}
-            name="image" required={true}
-            error={Boolean(getFieldError('image'))}
-            helperText={getFieldError('image')}
-          />
-        </Grid>
-
-        <Grid item xs>
-          <LoadingButton loadingIndicator="Loading…" loading={creating} type="submit" color="primary" variant="contained">Create</LoadingButton>
-        </Grid>
-      </Grid>
-    </form>
+      </form>
+    </>
   );
 };
 

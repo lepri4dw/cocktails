@@ -59,4 +59,5 @@ export interface CocktailMutationSend extends CocktailMutation {
 export interface Cocktail extends CocktailMutation {
   _id: string;
   isPublished: boolean;
+  image: string;
 }

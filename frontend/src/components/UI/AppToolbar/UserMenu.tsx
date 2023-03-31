@@ -43,6 +43,7 @@ const UserMenu: React.FC<Props> = ({user}) => {
       >
         <MenuItem>Profile</MenuItem>
         <MenuItem component={NavLink} to="/new-cocktail">Add cocktail</MenuItem>
+        <MenuItem component={NavLink} to="/my-cocktails">My cocktails</MenuItem>
         <MenuItem onClick={handleLogout} disabled={logoutLoading}>{logoutLoading && <CircularProgress size={20} sx={{mr: 1}}/>}Logout</MenuItem>
       </Menu>
     </>
